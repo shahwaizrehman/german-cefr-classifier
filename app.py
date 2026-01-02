@@ -45,10 +45,7 @@ except Exception as e:
 
 # --- USER INTERFACE ---
 st.title("🇩🇪 German CEFR Classifier")
-if "history" not in st.session_state:
-    st.session_state["history"] = []
-
-st.caption("Predict CEFR levels for German text. Use the single-text form or upload a CSV for batch scoring.")
+st.caption("Predict CEFR levels for German text. Use the single-text form.")
 st.table(pd.DataFrame(LEVEL_INFO))
 
 text_input = st.text_area("Enter German Text:", height=200, placeholder="Guten Tag!")
@@ -100,23 +97,10 @@ if st.button("Predict Level"):
             }
             st.info(descriptions.get(result_label, "Level detected."))
 
-            # 6. Log history for quick review
-            st.session_state["history"].append(
-                {
-                    "Preview": text_input[:120] + ("…" if len(text_input) > 120 else ""),
-                    "Predicted": result_label,
-                    "Confidence": confidence,
-                }
-            )
-            
         except Exception as e:
             st.error(f"Prediction error: {e}")
     else:
         st.warning("Please enter some text.")
-
-if st.session_state["history"]:
-    st.subheader("Recent predictions")
-    st.dataframe(pd.DataFrame(st.session_state["history"]))
 
 # --- DATASET & MODEL STATISTICS SECTION ---
 st.divider()
